@@ -66,3 +66,46 @@ async function deleteCompany(companyId: number) {
     }
 }
 
+
+
+// Employee CRUD Functions
+async function createEmployee(name: string, companyId: number) {
+    const connection = await pool.getConnection();
+    try {
+        await connection.execute('INSERT INTO employees (name, company_id) VALUES (?, ?)', [name, companyId]);
+    } finally {
+        connection.release
+    }
+}
+
+
+async function readEmployee() {
+    const connection = await pool.getConnection();
+    try {
+        const [read] = await connection.execute('SELECT * FROM employees')
+        return read;
+    } finally {
+        connection.release
+    }
+}
+
+
+async function updateEmployee(employeeId: number, name: string, companyId: number) {
+    const connection = await pool.getConnection();
+    try {
+        await connection.execute('UPDATE employees SET name = ?, company_id = ? WHERE id = ?', [name, companyId, employeeId])
+    } finally {
+        connection.release
+    }
+}
+
+
+async function deleteEmployee(employeeId: number) {
+    const connection = await pool.getConnection();
+    try {
+        await connection.execute('DELETE FROM employees WHERE id = ?', [employeeId,])
+    } finally {
+        connection.release
+    }
+}
+
