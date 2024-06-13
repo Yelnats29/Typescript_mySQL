@@ -1,21 +1,50 @@
-import pool from "./db";
+import mysql from 'mysql2/promise';
+import readline from 'readline';
+
+
+
+// Create the connection pool
+const pool = mysql.createPool({
+    host: 'localhost',
+    user: 'admin1',
+    password: 'admin123',
+    database: 'company_employee_db',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+});
+
+
+// Create the readline interface for terminal input
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+// Function to ask questions in the terminal
+function question(query: string): Promise<string> {
+    return new Promise(resolve => rl.question(query, resolve));
+}
+
+
+
 
 // Function to create tables
 async function createTables() {
     const connection = await pool.getConnection();
     try {
         await connection.execute(`
-            CREATE TABLE IF NOT EXISTS 'companies' (
-                id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+            CREATE TABLE IF NOT EXISTS companies (
+                id INT PRIMARY KEY AUTO_INCREMENT,
                 name varchar(30) NOT NULL,
                 city varchar(30) NOT NULL
             )
        `);
         await connection.execute(`
-            CREATE TABLE IF NOT EXISTS 'employees' (
-                id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+            CREATE TABLE IF NOT EXISTS employees (
+                id INT PRIMARY KEY AUTO_INCREMENT,
                 name varchar(30) NOT NULL,
-                company_id int,
+                company_id INT,
                 FOREIGN KEY (company_id) REFERENCES companies(id)
             )
         `);
@@ -111,16 +140,6 @@ async function deleteEmployee(employeeId: number) {
 
 // Terminal
 async function terminalMenu() {
-    // This is a function taken from Typescript
-    const readline = require('readline').createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-
-    function question(query: string): Promise<string> {
-        return new Promise(resolve => readline.question(query, resolve));
-    }
-
     while (true) {
         console.log('1. Manage Companies')
         console.log('2. Manage Employees')
@@ -137,21 +156,10 @@ async function terminalMenu() {
             console.log('Enter a valid option. ');
         }
     }
-
-    readline.close();
 }
 
 // Manage Company Loop
 async function manageCompanies() {
-    // This is a function taken from Typescript
-    const readline = require('readline').createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-
-    function question(query: string): Promise<string> {
-        return new Promise(resolve => readline.question(query, resolve));
-    }
     while (true) {
         console.log('1. Create company')
         console.log('2. Read companies')
@@ -181,22 +189,11 @@ async function manageCompanies() {
             console.log('Invalid option choice. Please make another selection: ')
         }
     }
-    readline.close()
 }
 
 
 // Manage Employee Loop
 async function manageEmployees() {
-    // This is a function taken from Typescript
-    const readline = require('readline').createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-
-    function question(query: string): Promise<string> {
-        return new Promise(resolve => readline.question(query, resolve));
-    }
-
     while (true) {
         console.log('1. Create employee')
         console.log('2. Read employees')
@@ -226,7 +223,6 @@ async function manageEmployees() {
             console.log('Invalid option choice. Please make another selection: ')
         }
     }
-    readline.close()
 }
 
 // Calling the terminal actions
