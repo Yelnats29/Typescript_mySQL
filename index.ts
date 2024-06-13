@@ -111,6 +111,7 @@ async function deleteEmployee(employeeId: number) {
 
 // Terminal
 async function terminalMenu() {
+    // This is a function taken from Typescript
     const readline = require('readline').createInterface({
         input: process.stdin,
         output: process.stdout
@@ -119,6 +120,7 @@ async function terminalMenu() {
     function question(query: string): Promise<string> {
         return new Promise(resolve => readline.question(query, resolve));
     }
+
     while (true) {
         console.log('1. Manage Companies')
         console.log('2. Manage Employees')
@@ -141,6 +143,7 @@ async function terminalMenu() {
 
 // Manage Company Loop
 async function manageCompanies() {
+    // This is a function taken from Typescript
     const readline = require('readline').createInterface({
         input: process.stdin,
         output: process.stdout
@@ -149,7 +152,6 @@ async function manageCompanies() {
     function question(query: string): Promise<string> {
         return new Promise(resolve => readline.question(query, resolve));
     }
-
     while (true) {
         console.log('1. Create company')
         console.log('2. Read companies')
@@ -185,6 +187,7 @@ async function manageCompanies() {
 
 // Manage Employee Loop
 async function manageEmployees() {
+    // This is a function taken from Typescript
     const readline = require('readline').createInterface({
         input: process.stdin,
         output: process.stdout
@@ -225,3 +228,10 @@ async function manageEmployees() {
     }
     readline.close()
 }
+
+// Calling the terminal actions
+(async () => {
+    await createTables(); // Create tables before starting the terminal menu
+    await terminalMenu();
+})
+();
