@@ -23,3 +23,46 @@ async function createTables() {
         connection.release()
     }
 }
+
+
+// Company CRUD Functions
+async function createCompany(name: string, city: string) {
+    const connection = await pool.getConnection();
+    try {
+        await connection.execute('INSERT INTO companies (name, city) VALUES (?, ?)', [name, city]);
+    } finally {
+        connection.release
+    }
+}
+
+
+async function readCompany() {
+    const connection = await pool.getConnection();
+    try {
+        const [read] = await connection.execute('SELECT * FROM companies')
+        return read;
+    } finally {
+        connection.release
+    }
+}
+
+
+async function updateCompany(companyId: number, name: string, city: string) {
+    const connection = await pool.getConnection();
+    try {
+        await connection.execute('UPDATE companies SET name = ?, city = ? WHERE id = ?', [name, city, companyId])
+    } finally {
+        connection.release
+    }
+}
+
+
+async function deleteCompany(companyId: number) {
+    const connection = await pool.getConnection();
+    try {
+        await connection.execute('DELETE FROM companies WHERE id = ?', [companyId,])
+    } finally {
+        connection.release
+    }
+}
+
