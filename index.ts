@@ -181,3 +181,47 @@ async function manageCompanies() {
     }
     readline.close()
 }
+
+
+// Manage Employee Loop
+async function manageEmployees() {
+    const readline = require('readline').createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    function question(query: string): Promise<string> {
+        return new Promise(resolve => readline.question(query, resolve));
+    }
+
+    while (true) {
+        console.log('1. Create employee')
+        console.log('2. Read employees')
+        console.log('3. Update employees')
+        console.log('4. Delete employees')
+        console.log('5. Go Back')
+        const choice = await question('Select your option: ');
+
+        if (choice == '1') {
+            const name = await question('Enter the name of the employee: ');
+            const companyId = parseInt(await question("Enter the employee's company Id number: "), 10);
+            await createEmployee(name, companyId);
+        } else if (choice == '2') {
+            const employees = await readEmployee()
+            console.log(employees)
+        } else if (choice == '3') {
+            const employeeId = parseInt(await question('Enter the new employee Id number: '), 10);
+            const name = await question('Enter the new employee name: ');
+            const companyId = parseInt(await question("Enter the employee's new company Id number: "));
+            await updateEmployee(employeeId, name, companyId)
+        } else if (choice == '4') {
+            const employeeId = parseInt(await question('Enter the employee Id number you wish to delete: '), 10)
+            await deleteCompany(employeeId)
+        } else if (choice == '5') {
+            break
+        } else {
+            console.log('Invalid option choice. Please make another selection: ')
+        }
+    }
+    readline.close()
+}
