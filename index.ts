@@ -109,3 +109,75 @@ async function deleteEmployee(employeeId: number) {
     }
 }
 
+// Terminal
+async function terminalMenu() {
+    const readline = require('readline').createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    function question(query: string): Promise<string> {
+        return new Promise(resolve => readline.question(query, resolve));
+    }
+    while (true) {
+        console.log('1. Manage Companies')
+        console.log('2. Manage Employees')
+        console.log('3. Exit')
+        const choice = await question('Enter the number of your choice: ');
+
+        if (choice == '1') {
+            await manageCompanies()
+        } else if (choice == '2') {
+            await manageEmployees()
+        } else if (choice == '3') {
+            break
+        } else {
+            console.log('Enter a valid option. ');
+        }
+    }
+
+    readline.close();
+}
+
+// Manage Company Loop
+async function manageCompanies() {
+    const readline = require('readline').createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    function question(query: string): Promise<string> {
+        return new Promise(resolve => readline.question(query, resolve));
+    }
+
+    while (true) {
+        console.log('1. Create company')
+        console.log('2. Read companies')
+        console.log('3. Update companies')
+        console.log('4. Delete companies')
+        console.log('5. Go Back')
+        const choice = await question('Select your option: ');
+
+        if (choice == '1') {
+            const name = await question('Enter the name of the company: ');
+            const city = await question('Enter the city the company is located in: ');
+            await createCompany(name, city);
+        } else if (choice == '2') {
+            const companies = await readCompany()
+            console.log(companies)
+        } else if (choice == '3') {
+            const companyId = parseInt(await question('Enter the new company Id number: '), 10);
+            const name = await question('Enter the new company name: ');
+            const city = await question('Enter the company city name: ');
+            await updateCompany(companyId, name, city)
+        } else if (choice == '4') {
+            const companyId = parseInt(await question('Enter the company Id number you wish to delete: '), 10)
+            await deleteCompany(companyId)
+        } else if (choice == '5') {
+            break
+        } else {
+            console.log('Invalid option choice. Please make another selection: ')
+        }
+    }
+    readline.close()
+}
